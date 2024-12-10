@@ -16,8 +16,7 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5292",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "SQLAZURECONNSTR_ContosoSuites": "Server=tcp:zclmstxrz53cc-sqlserver.database.windows.net,1433;Initial Catalog=ContosoSuitesBookings;Persist Security Info=False;User ID=contosoadmin;Password=\"g@G9@2nD7C1BP%uh\";MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "https": {
@@ -27,9 +26,7 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7244;http://localhost:5292",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "SQLAZURECONNSTR_ContosoSuites": "Server=tcp:zclmstxrz53cc-sqlserver.database.windows.net,1433;Initial Catalog=ContosoSuitesBookings;Persist Security Info=False;User ID=contosoadmin;Password=\"g@G9@2nD7C1BP%uh\";MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "IIS Express": {

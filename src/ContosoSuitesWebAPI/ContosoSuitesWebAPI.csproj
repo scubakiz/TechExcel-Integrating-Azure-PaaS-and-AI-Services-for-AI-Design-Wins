@@ -4,11 +4,14 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationInsightsResourceId>/subscriptions/25af7181-21e0-43d9-bffd-85f914393a99/resourceGroups/tech-excel-rg/providers/microsoft.insights/components/zclmstxrz53cc-cosu-ai</ApplicationInsightsResourceId>
+    <UserSecretsId>d200f597-263c-471c-abda-5ba3fd8f2012</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.AI.OpenAI" Version="2.0.0-beta.5" />
     <PackageReference Include="Azure.Identity" Version="1.12.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.42.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />

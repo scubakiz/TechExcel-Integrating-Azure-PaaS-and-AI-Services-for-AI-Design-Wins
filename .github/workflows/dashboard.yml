@@ -1,8 +1,13 @@
 name: Dashboard Deployment
+
+environment:
+  name: stage_environment  
+
 env:
   imageName: "${{ secrets.ACR_LOGIN_SERVER }}/techexcel/csdash:${{github.run_number}}"
   appName: ${{ vars.APP_PREFIX }}-dash
   appPath: ./src/ContosoSuitesDashboard
+
 on:
   push:
     branches: [ main ]
@@ -12,6 +17,7 @@ on:
     paths: src/ContosoSuitesDashboard/**
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+      
 jobs:
   dockerBuildPush:
     runs-on: ubuntu-latest

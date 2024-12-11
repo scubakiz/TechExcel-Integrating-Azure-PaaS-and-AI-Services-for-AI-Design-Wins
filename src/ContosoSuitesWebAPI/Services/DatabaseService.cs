@@ -1,6 +1,9 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Data.SqlClient;
 using ContosoSuitesWebAPI.Entities;
+using System.ComponentModel;
+using Microsoft.SemanticKernel;
+
 
 namespace ContosoSuitesWebAPI.Services;
 
@@ -12,6 +15,8 @@ public class DatabaseService : IDatabaseService
     /// <summary>
     /// Get all hotels from the database.
     /// </summary>
+    [KernelFunction]
+    [Description("Get all hotels.")]
     public async Task<IEnumerable<Hotel>> GetHotels()
     {
         var sql = "SELECT HotelID, HotelName, City, Country FROM dbo.Hotel";
@@ -40,6 +45,8 @@ public class DatabaseService : IDatabaseService
     /// <summary>
     /// Get a specific hotel from the database.
     /// </summary>
+    [KernelFunction]
+    [Description("Get all bookings for a single hotel.")]
     public async Task<IEnumerable<Booking>> GetBookingsForHotel(int hotelId)
     {
         var sql = "SELECT BookingID, CustomerID, HotelID, StayBeginDate, StayEndDate, NumberOfGuests FROM dbo.Booking WHERE HotelID = @HotelID";
@@ -99,4 +106,91 @@ public class DatabaseService : IDatabaseService
 
         return bookings;
     }
+
+    public async Task<IEnumerable<Booking>> GetBookingsMissingHotelRooms()
+    {
+        var sql = """
+            SELECT
+                b.BookingID,
+                b.CustomerID,
+                b.HotelID,
+                b.StayBeginDate,
+                b.StayEndDate,
+                b.NumberOfGuests
+            FROM dbo.Booking b
+            WHERE NOT EXISTS
+                (
+                    SELECT 1
+                    FROM dbo.BookingHotelRoom h
+                    WHERE
+                        b.BookingID = h.BookingID
+                );
+            """;
+        using var conn = new SqlConnection(
+            connectionString: Environment.GetEnvironmentVariable("SQLAZURECONNSTR_ContosoSuites")!
+        );
+        conn.Open();
+        using var cmd = new SqlCommand(sql, conn);
+        using var reader = await cmd.ExecuteReaderAsync();
+        var bookings = new List<Booking>();
+        while (await reader.ReadAsync())
+        {
+            bookings.Add(new Booking
+            {
+                BookingID = reader.GetInt32(0),
+                CustomerID = reader.GetInt32(1),
+                HotelID = reader.GetInt32(2),
+                StayBeginDate = reader.GetDateTime(3),
+                StayEndDate = reader.GetDateTime(4),
+                NumberOfGuests = reader.GetInt32(5)
+            });
+        }
+        conn.Close();
+
+        return bookings;
+    }
+
+    public async Task<IEnumerable<Booking>> GetBookingsWithMultipleHotelRooms()
+    {
+        var sql = """
+            SELECT
+                b.BookingID,
+                b.CustomerID,
+                b.HotelID,
+                b.StayBeginDate,
+                b.StayEndDate,
+                b.NumberOfGuests
+            FROM dbo.Booking b
+            WHERE
+                (
+                    SELECT COUNT(1)
+                    FROM dbo.BookingHotelRoom h
+                    WHERE
+                        b.BookingID = h.BookingID
+                ) > 1;
+            """;
+        using var conn = new SqlConnection(
+            connectionString: Environment.GetEnvironmentVariable("SQLAZURECONNSTR_ContosoSuites")!
+        );
+        conn.Open();
+        using var cmd = new SqlCommand(sql, conn);
+        using var reader = await cmd.ExecuteReaderAsync();
+        var bookings = new List<Booking>();
+        while (await reader.ReadAsync())
+        {
+            bookings.Add(new Booking
+            {
+                BookingID = reader.GetInt32(0),
+                CustomerID = reader.GetInt32(1),
+                HotelID = reader.GetInt32(2),
+                StayBeginDate = reader.GetDateTime(3),
+                StayEndDate = reader.GetDateTime(4),
+                NumberOfGuests = reader.GetInt32(5)
+            });
+        }
+        conn.Close();
+
+        return bookings;
+    }
+
 }

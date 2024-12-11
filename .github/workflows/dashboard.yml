@@ -1,8 +1,5 @@
 name: Dashboard Deployment
 
-environment:
-  name: stage_environment  
-
 env:
   imageName: "${{ secrets.ACR_LOGIN_SERVER }}/techexcel/csdash:${{github.run_number}}"
   appName: ${{ vars.APP_PREFIX }}-dash
